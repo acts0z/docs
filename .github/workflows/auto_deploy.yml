@@ -1,0 +1,39 @@
+name: 빌드배포하기
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:      
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 소스 checkout
+        uses: actions/checkout@v2.4.0
+        with:
+          submodules: true
+          fetch-depth: 0
+
+      - name: Hugo 세팅하기
+        uses: peaceiris/actions-hugo@v2
+        with:
+          hugo-version: 'latest'
+
+      - name: HUG 빌드하기
+        run: hugo --minify
+
+      - name: HTML 체크하기
+        uses: chabad360/htmlproofer@master
+        with:
+          directory: "./public"
+          arguments: --only-4xx --check-favicon --check-html --assume-extension --empty-alt-ignore --disable-external
+        continue-on-error: ${{ github.event_name == 'push' }}
+
+      - name: Deploy to GitHub Pages
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./public
