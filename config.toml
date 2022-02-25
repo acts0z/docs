@@ -1,8 +1,10 @@
-baseURL = 'https://acts0z.github.io/docs/'
+baseURL = 'https://acts0z.github.io/'
 languageCode = 'ko-kr'
 disableKinds = ["sitemap", "RSS"]
-title = 'My New Hugo Site'
+title = '현주의 프리젠테이션'
 theme = "reveal-hugo"
+relativeURLs = true
+uglyURLs = false
 
 [author]
 name = "acts0z"
